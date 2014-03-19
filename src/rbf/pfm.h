@@ -13,7 +13,7 @@
 #include<cstdlib>
 using namespace std;
 
-#define debugAss 1
+//#define debugAss 1
 //#define debugIX 1
 //#define debugIXU 1
 //#define debugFH 1
@@ -24,7 +24,7 @@ using namespace std;
 //#define debugRBFMU 1
 //#define debugRM 1
 //#define debugRMU 1
-#define debugQE 1
+//#define debugQE 1
 //#define debugQEU
 //#define debug1 1
 //#define debug2 1
