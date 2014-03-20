@@ -22,9 +22,9 @@ using namespace std;
 //#define debugPFMU 1
 //#define debugRBFM 1
 //#define debugRBFMU 1
-//#define debugRM 1
-//#define debugRMU 1
-//#define debugQE 1
+#define debugRM 1
+#define debugRMU 1
+#define debugQE 1
 //#define debugQEU
 //#define debug1 1
 //#define debug2 1
