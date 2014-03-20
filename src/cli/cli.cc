@@ -18,6 +18,14 @@
 #define DIVISOR_LENGTH 5
 #define EXIT_CODE -99
 #define DATABASE_FOLDER ""
+#define debugcl 1
+
+#ifdef debugcl
+#define dbgncl(str1,str2)  cout<<str1<<":"<<str2<<endl;
+#else
+#define dbgncl(str1,str2) void(0);
+#endif
+
 
 CLI * CLI::_cli = 0;
 
@@ -947,12 +955,16 @@ RC CLI::dropTable()
   if (tokenizer == NULL)
     return error ("I expect <tableName> to be dropped");
 
+  dbgncl("1","1");
   string tableName = string(tokenizer);
 
   // delete indexes from cli_indexes table if there are
   RID rid;
   vector<Attribute> attributes;
   this->getAttributesFromCatalog(tableName, attributes);
+dbgncl("2","2");
+
+dbgncl("attribute size",attributes.size());
   for (uint i = 0; i < attributes.size(); i++) {
     if(this->checkAttribute(tableName, attributes[i].name, rid, false)) {
       // delete the index from cli_indexes table
@@ -976,10 +988,10 @@ RC CLI::dropTable()
   void *value = malloc(stringSize + sizeof(unsigned));
   memcpy((char *)value, &stringSize, sizeof(unsigned));
   memcpy((char *)value + sizeof(unsigned), tableName.c_str(), stringSize);
-   
+  dbgncl("nbear scan",""); 
   if( rm->scan(CLI_TABLES, "table_name", EQ_OP, value, stringAttributes, rmsi) != 0)
     return -1;
-  
+  dbgncl("scaN DONE PROPERLY.. NO CRASH",""); 
   // delete tableName from CLI_TABLES
   while(rmsi.getNextTuple(rid, data_returned) != RM_EOF){
     if(rm->deleteTuple(CLI_TABLES, rid) != 0)
@@ -987,18 +999,18 @@ RC CLI::dropTable()
   }
   rmsi.close();
   free(value);
-
+dbgncl("deleted name from cli index","");
   // Delete columns from CLI_COLUMNS  
   
   stringSize = tableName.size();
   value = malloc(stringSize + sizeof(unsigned));
   memcpy((char *)value, &stringSize, sizeof(unsigned));
   memcpy((char *)value + sizeof(unsigned), tableName.c_str(), stringSize);
-   
+  dbgncl("copy done",""); 
   if( rm->scan(CLI_COLUMNS, "table_name", EQ_OP, value, stringAttributes, rmsi) != 0)
     return -1;
 
-
+dbgncl("scan done for cli columns","");
   // We rely on the fact that RM_EOF is not 0. 
   // we want to return -1 when getNext tuple errors
   RC ret = -10;
@@ -1006,6 +1018,7 @@ RC CLI::dropTable()
     if(rm->deleteTuple(CLI_COLUMNS, rid) != 0)
       return -1;
   }
+dbgncl("delete done for cli columns","");
   rmsi.close();
   free(value);
   
@@ -1018,7 +1031,7 @@ RC CLI::dropTable()
   ret = rm->deleteTable(tableName);
   if (ret != 0)
     return error("error in deleting table in recordManager");
-
+dbgncl("end of function","");
   return 0;
 }
 
